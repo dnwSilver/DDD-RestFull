@@ -1,8 +1,9 @@
 ﻿using System.Windows.Input;
+using Standard.DDD;
+using Standard.RestFull;
+using Standard.SDK;
 
-using Etalon.DDD;
-
-namespace Etalon
+namespace Standard
 {
     partial class API
     {
@@ -37,10 +38,10 @@ namespace Etalon
         public Result SomeMethod(ISpecification[] specs, IBuilder builder)
         {
             Repository repositoryEntity = null;
-            IEntity entity = repositoryEntity.SearchEntity(specs);
+            Entity entity = repositoryEntity.ReadEntity(specs);
 
             Repository repositoryValueObject = null;
-            IValueObject valueObject = repositoryValueObject.SearchValueObject(specs);
+            ValueObject valueObject = repositoryValueObject.ReadValueObject(specs);
 
             Result resultMethod1 = entity.SomeMethod(builder.SomeField());
             Result resultMethod2 = entity.SomeMethod(builder.SomeField());
@@ -67,6 +68,28 @@ namespace Etalon
             bus.SendEvent(integrationEvent);
 
             return Result.Combine(resultSave1, resultSave2);
+        }
+    }
+    partial class Repository
+    {
+        // Infrastracture
+        public Result UpdateEntity(Entity entity)
+        {
+            IDataSource dataSource = null;
+            IDataTransferObjectIn dataTransferObjectIn = entity.MapToDTOIn();
+            IDataTransferObjectOut dataTransferObjectOut = dataSource.Create(dataTransferObjectIn);
+            Result result = dataTransferObjectOut.MapToResult();
+            return result;
+        }
+
+        // Infrastracture
+        public Result UpdateValueObject(ValueObject valueObject)
+        {
+            IDataSource dataSource = null;
+            IDataTransferObjectIn dataTransferObjectIn = valueObject.MapToDTOIn();
+            IDataTransferObjectOut dataTransferObjectOut = dataSource.Create(dataTransferObjectIn);
+            Result result = dataTransferObjectOut.MapToResult();
+            return result;
         }
     }
 }

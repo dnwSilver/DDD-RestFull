@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Standard.DDD;
+using Standard.SDK;
 
-using Etalon.DDD;
-
-namespace Etalon.RestFull
+namespace Standard.RestFull
 {
     partial class API
     {
@@ -13,10 +13,9 @@ namespace Etalon.RestFull
         IResponse Put(IRequest request)
         {
             // Presentation
-            ISpecification[] specs = request.MapToSpecs();
             IBuilder builder = request.MapToBuilder();
             Service someService = null;
-            Result result = someService.Update(specs, builder);
+            Result result = someService.Update(builder);
 
             return result.MapToResponse();
         }
@@ -24,17 +23,14 @@ namespace Etalon.RestFull
 
     partial class Service
     {
-        public Result Update(ISpecification[] specs, IBuilder builder)
+        public Result Update(IBuilder builder)
         {
-            Repository repositoryEntity = null;
-            IEntity entity = repositoryEntity.SearchEntity(specs);
+            Factory factoryEntity = null;
+            Entity newEntity = factoryEntity.CreateEntity(builder);
 
-            Repository repositoryValueObject = null;
-            IValueObject valueObject = repositoryValueObject.SearchValueObject(specs);
+            Factory factoryValueObject = null;
+            ValueObject newValueObject = factoryValueObject.CreateValueObject(builder);
 
-            Result resultMethod1 = entity.SomeMethod(builder.SomeField());
-            Result resultMethod2 = entity.SomeMethod(builder.SomeField());
-            valueObject.SomeMethod(builder.SomeField());
 
             IUnitOfWork unitOfWork = null;
             Result resultSave1;
@@ -43,10 +39,10 @@ namespace Etalon.RestFull
             using (unitOfWork)
             {
                 Repository entityRepository = null;
-                resultSave1 = entityRepository.UpdateEntity(entity);
+                resultSave1 = entityRepository.UpdateEntity(newEntity);
 
                 Repository entityValueObject = null;
-                resultSave2 = entityValueObject.UpdateValueObject(valueObject);
+                resultSave2 = entityValueObject.UpdateValueObject(newValueObject);
             }
 
             IIntegrationEvent integrationEvent = null;

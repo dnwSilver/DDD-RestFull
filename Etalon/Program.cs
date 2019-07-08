@@ -1,12 +1,13 @@
 ﻿using System;
 
-namespace Etalon
+namespace Standard
 {
     class Program
     {
         static void Main(string[] args)
         {
             Console.WriteLine("Hello World!");
+            Console.ReadKey();
         }
     }
 }

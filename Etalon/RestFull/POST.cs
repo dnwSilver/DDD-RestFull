@@ -1,6 +1,8 @@
-﻿using Etalon.DDD;
+﻿using Standard.DDD;
+using Standard.RestFull;
+using Standard.SDK;
 
-namespace Etalon
+namespace Standard
 {
     partial class API
     {
@@ -22,10 +24,10 @@ namespace Etalon
         public Result Create(IBuilder[] builders)
         {
             Factory factoryEntity = null;
-            IEntity entity = factoryEntity.CreateEntity(builders[0]);
+            Entity entity = factoryEntity.CreateEntity(builders[0]);
 
             Factory factoryValueObject = null;
-            IValueObject valueObject = factoryValueObject.CreateValueObject(builders[1]);
+            ValueObject valueObject = factoryValueObject.CreateValueObject(builders[1]);
 
             IUnitOfWork unitOfWork = null;
             Result resultSave1;
@@ -34,10 +36,10 @@ namespace Etalon
             using (unitOfWork)
             {
                 Repository entityRepository = null;
-                resultSave1 = entityRepository.SaveEntity(entity);
+                resultSave1 = entityRepository.CreateEntity(entity);
 
                 Repository entityValueObject = null;
-                resultSave2 = entityValueObject.SaveValueObject(valueObject);
+                resultSave2 = entityValueObject.CreateValueObject(valueObject);
             }
 
             IIntegrationEvent integrationEvent = null;
@@ -51,7 +53,7 @@ namespace Etalon
     partial class Repository
     {
         // Infrastracture
-        public Result SaveEntity(IEntity entity)
+        public Result CreateEntity(Entity entity)
         {
             IDataSource dataSource = null;
             IDataTransferObjectIn dataTransferObjectIn = entity.MapToDTOIn();
@@ -61,7 +63,7 @@ namespace Etalon
         }
 
         // Infrastracture
-        public Result SaveValueObject(IValueObject valueObject)
+        public Result CreateValueObject(ValueObject valueObject)
         {
             IDataSource dataSource = null;
             IDataTransferObjectIn dataTransferObjectIn = valueObject.MapToDTOIn();

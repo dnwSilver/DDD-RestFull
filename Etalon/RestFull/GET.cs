@@ -1,6 +1,8 @@
-﻿using Etalon.DDD;
+﻿using Standard.DDD;
+using Standard.RestFull;
+using Standard.SDK;
 
-namespace Etalon
+namespace Standard
 {
     partial class API
     {
@@ -31,10 +33,10 @@ namespace Etalon
         public IAggregate Search(ISpecification[] specs)
         {
             Repository repositoryEntity = null;
-            IEntity entity = repositoryEntity.SearchEntity(specs);
+            Entity entity = repositoryEntity.ReadEntity(specs);
 
             Repository repositoryValueObject = null;
-            IValueObject valueObject = repositoryValueObject.SearchValueObject(specs);
+            ValueObject valueObject = repositoryValueObject.ReadValueObject(specs);
 
             IAggregate aggregate = null;
             aggregate.SetEntity(entity);
@@ -51,7 +53,7 @@ namespace Etalon
     partial class Repository
     {
         // Infrastracture
-        public IEntity SearchEntity(ISpecification[] specs)
+        public Entity ReadEntity(ISpecification[] specs)
         {
             IDataSource dataSource = null;
             IDataTransferObjectIn dataTransferObjectIn = specs[0].MapToDTOIn();
@@ -59,13 +61,13 @@ namespace Etalon
 
             IBuilder builderEntity = dataTransferObjectOut.MapToBuilder();
             Factory factoryEntity = null;
-            IEntity entity = factoryEntity.RecoveryEntity(builderEntity);
+            Entity entity = factoryEntity.RecoveryEntity(builderEntity);
 
             return entity;
         }
 
         // Infrastracture
-        public IValueObject SearchValueObject(ISpecification[] specs)
+        public ValueObject ReadValueObject(ISpecification[] specs)
         {
             IDataSource dataSource = null;
             IDataTransferObjectIn dataTransferObjectIn = specs[0].MapToDTOIn();
@@ -73,7 +75,7 @@ namespace Etalon
 
             IBuilder builderValueObject = dataTransferObjectOut.MapToBuilder();
             Factory factoryValueObject = null;
-            IValueObject valueObject = factoryValueObject.RecoveryValueObject(builderValueObject);
+            ValueObject valueObject = factoryValueObject.RecoveryValueObject(builderValueObject);
 
             return valueObject;
         }

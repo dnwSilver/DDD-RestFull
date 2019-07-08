@@ -1,6 +1,8 @@
-﻿using Etalon.DDD;
+﻿using Standard.DDD;
+using Standard.RestFull;
+using Standard.SDK;
 
-namespace Etalon
+namespace Standard
 {
     partial class API
     {
@@ -22,10 +24,10 @@ namespace Etalon
         public Result Delete(ISpecification[] specs)
         {
             Repository repositoryEntity = null;
-            IEntity entity = repositoryEntity.SearchEntity(specs);
+            Entity entity = repositoryEntity.ReadEntity(specs);
 
             Repository repositoryValueObject = null;
-            IValueObject valueObject = repositoryValueObject.SearchValueObject(specs);
+            ValueObject valueObject = repositoryValueObject.ReadValueObject(specs);
 
             IUnitOfWork unitOfWork = null;
             Result resultSave1;
@@ -51,7 +53,7 @@ namespace Etalon
     partial class Repository
     {
         // Infrastracture
-        public Result DeleteEntity(IEntity entity)
+        public Result DeleteEntity(Entity entity)
         {
             Factory factoryEntity = null;
             Result disposalPermitEntity = factoryEntity.DisposalPermit(entity);
@@ -68,7 +70,7 @@ namespace Etalon
         }
 
         // Infrastracture
-        public Result DeleteValueObject(IValueObject valueObject)
+        public Result DeleteValueObject(ValueObject valueObject)
         {
             Factory factoryValueObject = null;
             Result disposalPermitValueObject = factoryValueObject.DisposalPermit(valueObject);
