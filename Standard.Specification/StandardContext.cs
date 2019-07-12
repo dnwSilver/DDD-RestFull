@@ -1,4 +1,6 @@
 ﻿
+using System.Diagnostics;
+
 using Microsoft.EntityFrameworkCore;
 
 namespace Standard.Specification
@@ -10,8 +12,7 @@ namespace Standard.Specification
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer(
-                @"Server=.;Database=Standard;Integrated Security=True");
+            optionsBuilder.UseSqlServer(@"Server=.;Database=Standard;Integrated Security=True");
         }
     }
 
