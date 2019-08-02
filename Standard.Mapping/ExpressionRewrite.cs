@@ -4,12 +4,18 @@ using System.Linq.Expressions;
 
 namespace Standard.Mapping
 {
-    public class ExpressionRewrite<TSource, TDestination, TMapper> : ExpressionVisitor
-        where TMapper : EntityMapper, new()
+    /// <summary>
+    ///     Класс для преобразования условий и замене полей доменной сущности на поля из модели данных.
+    /// </summary>
+    /// <typeparam name="TSource">Первоисточник выражения.</typeparam>
+    /// <typeparam name="TDestination">Класс для которого будет перестроено выражение.</typeparam>
+    /// <typeparam name="TPropertyMapper">Класс для сопоставляющий поля <see cref="TSource" /> и <see cref="TDestination" />.</typeparam>
+    public class ExpressionRewrite<TSource, TDestination, TPropertyMapper> : ExpressionVisitor
+        where TPropertyMapper : IPropertyMapper, new()
     {
         private readonly Stack<ParameterExpression[]> _lambdaStack = new Stack<ParameterExpression[]>();
 
-        private readonly TMapper _mapper = new TMapper();
+        private readonly TPropertyMapper _mapper = new TPropertyMapper();
 
         protected override Expression VisitLambda<T>(Expression<T> node)
         {
@@ -34,7 +40,7 @@ namespace Standard.Mapping
 
             if(typeof(TDestination) == declaringType)
             {
-                propertyName = this._mapper.GetPropertyName(propertyName);
+                propertyName = this._mapper.GetPropertyModelName(propertyName);
 
                 memberExpression = Expression.Property(this.Visit(memberExpression.Expression),
                                                        typeof(TSource).GetProperty(propertyName));
